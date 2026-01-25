@@ -1,3 +1,17 @@
+ //in Ink do
+ //EXTERNAL place_characters(left_character_name, right_character_name)
+ //EXTERNAL change_emotion(emotion, ID)
+ //{place_characters("Charcter", "Character 1")}
+ //{change_emotion("Angry", 0)} changes the character on the left to be angry
+ 
+ //left = 0, right = 1
+
+EXTERNAL place_characters(left_character_name, right_character_name)
+EXTERNAL change_emotion(emotion, ID)
+{place_characters("Charcter", "Character 1")}
+{change_emotion("Normal",0)}
+
+
 After a night shift at the office…
 Eleven at night to seven in the morning.
 Same Room. Same Desk. Same Chair.

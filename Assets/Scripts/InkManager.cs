@@ -12,14 +12,6 @@ public class InkManager : MonoBehaviour {
         // Remove the default message
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
-        story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
-        {
-            cm.PlaceCharacters(leftName, rightName);
-        });
-        story.BindExternalFunction("change_emotion", (string emotion, int ID) =>
-        {
-            cm.ChangeCharacterEmotion(emotion, ID);
-        });
         RemoveChildren();
         StartStory();
     }
@@ -29,6 +21,14 @@ public class InkManager : MonoBehaviour {
     {
         story = new Story(inkJSONAsset.text);
         if (OnCreateStory != null) OnCreateStory(story);
+        story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
+        {
+            cm.PlaceCharacters(leftName, rightName);
+        });
+        story.BindExternalFunction("change_emotion", (string emotion, int ID) =>
+        {
+            cm.ChangeCharacterEmotion(emotion, ID);
+        });
         RefreshView();
     }
 
