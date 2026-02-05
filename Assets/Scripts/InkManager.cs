@@ -6,6 +6,7 @@ using TMPro;
 using TMPro.EditorUtilities;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 
 public class InkManager : MonoBehaviour { 
@@ -28,6 +29,8 @@ public class InkManager : MonoBehaviour {
     private GameManager gm;
     [SerializeField]
     private Button nextButton;
+    [SerializeField]
+    private Transform choicesBox;
     //private bool dialogueIsPlaying = false;
 
 
@@ -50,25 +53,15 @@ public class InkManager : MonoBehaviour {
 
         story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
         {
-            cm.PlaceCharacters(leftName, rightName);
+            if(cm != null) cm.PlaceCharacters(leftName, rightName);
         });
         story.BindExternalFunction("change_emotion", (string emotion, int ID) =>
         {
             cm.ChangeCharacterEmotion(emotion, ID);
         });
 
-        //dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
-        while (story.canContinue)
-        {
-            // Continue gets the next line of the story
-            string text = story.Continue();
-            // This removes any white space from the text.
-            text = text.Trim();
-            // Display the text on screen!
-            CreateContentView(text);
-        }
-        
+
         if (story.currentChoices.Count > 0)
         {
             for (int i = 0; i < story.currentChoices.Count; i++)
@@ -90,6 +83,31 @@ public class InkManager : MonoBehaviour {
         }
         
         //RefreshView();
+    }
+    public void NextLine()
+    {
+        ContinueStory();
+    }
+
+    private void ContinueStory()
+    {
+        if(story.canContinue)
+        {
+            // Continue gets the next line of the story
+            string text = story.Continue();
+            // This removes any white space from the text.
+            text = text.Trim();
+            // Display the text on screen!
+            CreateContentView(text);
+        }
+        else
+        {
+            ExitDialogue();
+        }
+    }
+    public void ExitDialogue()
+    {
+        dialoguePanel.SetActive(false);
     }
 
     // This is the main function called every time the story changes. It does a few things:
@@ -117,11 +135,19 @@ public class InkManager : MonoBehaviour {
     }
 
     // Creates a textbox showing the the line of text
+
+    private TMP_Text currentStoryText;
     void CreateContentView(string text)
     {
-        TMP_Text storyText = Instantiate(dialogueText, dialoguePanel.transform, false);
-        storyText.text = text;
+
         //storyText.transform.SetParent(canvas.transform, false);
+        if (currentStoryText != null)
+        {
+            Destroy(currentStoryText.gameObject);
+        }
+
+        currentStoryText = Instantiate(dialogueText, dialoguePanel.transform, false);
+        currentStoryText.text = text;
     }
 
     // Creates a button showing the choice text
@@ -129,18 +155,29 @@ public class InkManager : MonoBehaviour {
     {
         // Creates the button from a prefab
         Button choice = Instantiate(buttonPrefab) as Button;
-        choice.transform.SetParent(canvas.transform, false);
-        dialoguePanel.SetActive(true);
+
+        TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
+        if (choiceText != null)
+        {
+            choiceText.text = text;
+        }
+        else
+        {
+            Debug.Log("missing choice button");
+        }
+        return choice;
+        //choice.transform.SetParent(canvas.transform, false);
+        //dialoguePanel.SetActive(true);
 
         // Gets the text from the button prefab
-        TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
-        choiceText.text = text;
+        //TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
+        //choiceText.text = text;
 
         // Make the button expand to fit the text
-        HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
-        layoutGroup.childForceExpandHeight = false;
+        //HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
+        //layoutGroup.childForceExpandHeight = false;
 
-        return choice;
+        //return choice;
     }
 
     // Destroys all the children of this gameobject (all the UI)
