@@ -1,17 +1,21 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+//using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField]
-    private GameObject startButton;
+    public Button startButton;
     [SerializeField]
-    private TextAsset inkJSON; 
+    public TextAsset inkJSON;
+    [SerializeField]
+    private InkManager inkManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startButton.SetActive(true);
+        startButton.onClick.AddListener(Story);
     }
 
     // Update is called once per frame
@@ -22,7 +26,7 @@ public class DialogueTrigger : MonoBehaviour
 
     public void Story()
     {
-        startButton.SetActive(false);
-        InkManager.GetInstance().StartStory(inkJSON);
+        startButton.gameObject.SetActive(false);
+        inkManager.StartStory(inkJSON);
     }
 }

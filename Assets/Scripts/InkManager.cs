@@ -24,40 +24,40 @@ public class InkManager : MonoBehaviour {
     private Button buttonPrefab = null;
     [SerializeField]
     private GameObject dialoguePanel;
-    CharacterManager cm;
-    GameManager gm;
-    private bool dialogueIsPlaying = false;
+    private CharacterManager cm;
+    private GameManager gm;
+    [SerializeField]
+    private Button nextButton;
+    //private bool dialogueIsPlaying = false;
 
-    private static InkManager instance;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            Debug.Log("Found more than one manager");
-        }
-        instance = this;
-    }
+
     void Start()
     {
         // Remove the default message
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
-        dialogueIsPlaying = false;
+        //dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
-        RemoveChildren();
+        //RemoveChildren();
         //StartStory();
     }
 
-    public static InkManager GetInstance()
-    {
-        return instance;
-    }
     // Creates a new Story object with the compiled story which we can then play!
     public void StartStory(TextAsset inkJSON)
     {
         story = new Story(inkJSON.text);
-        dialogueIsPlaying = true;
+
+        story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
+        {
+            cm.PlaceCharacters(leftName, rightName);
+        });
+        story.BindExternalFunction("change_emotion", (string emotion, int ID) =>
+        {
+            cm.ChangeCharacterEmotion(emotion, ID);
+        });
+
+        //dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
         while (story.canContinue)
         {
@@ -68,7 +68,7 @@ public class InkManager : MonoBehaviour {
             // Display the text on screen!
             CreateContentView(text);
         }
-
+        
         if (story.currentChoices.Count > 0)
         {
             for (int i = 0; i < story.currentChoices.Count; i++)
@@ -85,17 +85,10 @@ public class InkManager : MonoBehaviour {
         {
             Button choice = CreateChoiceView("End of story.\nRestart?");
             choice.onClick.AddListener(delegate {
-                StartStory();
+                StartStory(inkJSON);
             });
         }
-        story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
-        {
-            cm.PlaceCharacters(leftName, rightName);
-        });
-        story.BindExternalFunction("change_emotion", (string emotion, int ID) =>
-        {
-            cm.ChangeCharacterEmotion(emotion, ID);
-        });
+        
         //RefreshView();
     }
 
@@ -126,9 +119,9 @@ public class InkManager : MonoBehaviour {
     // Creates a textbox showing the the line of text
     void CreateContentView(string text)
     {
-        TMP_Text storyText = Instantiate(dialogueText) as TMP_Text;
+        TMP_Text storyText = Instantiate(dialogueText, dialoguePanel.transform, false);
         storyText.text = text;
-        storyText.transform.SetParent(canvas.transform, false);
+        //storyText.transform.SetParent(canvas.transform, false);
     }
 
     // Creates a button showing the choice text
@@ -137,9 +130,10 @@ public class InkManager : MonoBehaviour {
         // Creates the button from a prefab
         Button choice = Instantiate(buttonPrefab) as Button;
         choice.transform.SetParent(canvas.transform, false);
+        dialoguePanel.SetActive(true);
 
         // Gets the text from the button prefab
-        Text choiceText = choice.GetComponentInChildren<Text>();
+        TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
         choiceText.text = text;
 
         // Make the button expand to fit the text
