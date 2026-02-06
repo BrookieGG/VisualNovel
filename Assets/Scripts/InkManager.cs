@@ -7,6 +7,7 @@ using TMPro.EditorUtilities;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine.EventSystems;
 
 
 public class InkManager : MonoBehaviour { 
@@ -29,8 +30,11 @@ public class InkManager : MonoBehaviour {
     private GameManager gm;
     [SerializeField]
     private Button nextButton;
+
+
     [SerializeField]
-    private Transform choicesBox;
+    private GameObject[] choices;
+    private TextMeshProUGUI[] choicesText;
     //private bool dialogueIsPlaying = false;
 
 
@@ -42,8 +46,16 @@ public class InkManager : MonoBehaviour {
         gm = GetComponent<GameManager>();
         //dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
+        nextButton.onClick.AddListener(ContinueStory);
         //RemoveChildren();
         //StartStory();
+        choicesText = new TextMeshProUGUI[choices.Length];
+        int index = 0;
+        foreach (GameObject choice in choices)
+        {
+            choicesText[index] = choice.GetComponentInChildren<TextMeshProUGUI>();
+            index++;
+        }
     }
 
     // Creates a new Story object with the compiled story which we can then play!
@@ -62,25 +74,7 @@ public class InkManager : MonoBehaviour {
 
         dialoguePanel.SetActive(true);
 
-        if (story.currentChoices.Count > 0)
-        {
-            for (int i = 0; i < story.currentChoices.Count; i++)
-            {
-                Choice choice = story.currentChoices[i];
-                Button button = CreateChoiceView(choice.text.Trim());
-                // Tell the button what to do when we press it
-                button.onClick.AddListener(delegate {
-                    OnClickChoiceButton(choice);
-                });
-            }
-        }
-        else
-        {
-            Button choice = CreateChoiceView("End of story.\nRestart?");
-            choice.onClick.AddListener(delegate {
-                StartStory(inkJSON);
-            });
-        }
+        ContinueStory();
         
         //RefreshView();
     }
@@ -93,12 +87,19 @@ public class InkManager : MonoBehaviour {
     {
         if(story.canContinue)
         {
-            // Continue gets the next line of the story
-            string text = story.Continue();
-            // This removes any white space from the text.
-            text = text.Trim();
+            // Continue gets the next line of the story and removes any white space from the text.
+            string text = story.Continue().Trim();
             // Display the text on screen!
             CreateContentView(text);
+
+            HideChoices();
+            nextButton.gameObject.SetActive(true);
+        }
+        else if (story.currentChoices.Count > 0)
+        {
+
+            DisplayChoices();
+            nextButton.gameObject.SetActive(false);
         }
         else
         {
@@ -128,11 +129,7 @@ public class InkManager : MonoBehaviour {
     }
 
     // When we click the choice button, tell the story to choose that choice!
-    void OnClickChoiceButton(Choice choice)
-    {
-        story.ChooseChoiceIndex(choice.index);
-        RefreshView();
-    }
+    
 
     // Creates a textbox showing the the line of text
 
@@ -151,34 +148,7 @@ public class InkManager : MonoBehaviour {
     }
 
     // Creates a button showing the choice text
-    Button CreateChoiceView(string text)
-    {
-        // Creates the button from a prefab
-        Button choice = Instantiate(buttonPrefab) as Button;
 
-        TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
-        if (choiceText != null)
-        {
-            choiceText.text = text;
-        }
-        else
-        {
-            Debug.Log("missing choice button");
-        }
-        return choice;
-        //choice.transform.SetParent(canvas.transform, false);
-        //dialoguePanel.SetActive(true);
-
-        // Gets the text from the button prefab
-        //TMP_Text choiceText = choice.GetComponentInChildren<TMP_Text>();
-        //choiceText.text = text;
-
-        // Make the button expand to fit the text
-        //HorizontalLayoutGroup layoutGroup = choice.GetComponent<HorizontalLayoutGroup>();
-        //layoutGroup.childForceExpandHeight = false;
-
-        //return choice;
-    }
 
     // Destroys all the children of this gameobject (all the UI)
     void RemoveChildren()
@@ -189,4 +159,54 @@ public class InkManager : MonoBehaviour {
             Destroy(canvas.transform.GetChild(i).gameObject);
         }
     }
+
+    private void DisplayChoices()
+    {
+        List<Choice> currentChoices = story.currentChoices;
+
+        if (currentChoices.Count > choices.Length)
+        {
+            Debug.Log("more choices were given than UI can show");
+        }
+
+        int index = 0;
+        //enable and initialize the choices up to the amount of choices in ink
+        foreach(Choice choice in currentChoices)
+        {
+            choices[index].gameObject.SetActive(true);
+            choicesText[index].text = choice.text;
+            index++;
+        }
+        // go through the remaining choices
+        for (int i = index; i < choices.Length; i++)
+        {
+            choices[i].gameObject.SetActive(false);
+        }
+
+        StartCoroutine(SelectFirstChoice());
+    }
+
+    private IEnumerator SelectFirstChoice()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
+    }
+
+    public void MakeChoice(int choiceIndex)
+    {
+        story.ChooseChoiceIndex(choiceIndex);
+
+        HideChoices();
+        ContinueStory();
+    }
+
+    private void HideChoices()
+    {
+        foreach (GameObject choice in choices)
+        {
+            choice.SetActive(false);
+        }
+    }
+        
 }
