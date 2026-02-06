@@ -8,8 +8,6 @@
 
 EXTERNAL place_characters(left_character_name, right_character_name)
 EXTERNAL change_emotion(emotion, ID)
-{place_characters("Character", "Character 1")}
-{change_emotion("Normal",0)}
 
 
 After a night shift at the office…
@@ -22,7 +20,10 @@ The cases that never quite leave your head.
  * [Get Out of Bed.] -> Bed
 
 ==Bed==
-YOU: I guess I better start getting ready.
+{place_characters("Character", "Character 1")}
+{change_emotion("Normal",0)}
+
+I guess I better start getting ready. #speaker:YOU
 
 
 It’s been years since you’ve been here.

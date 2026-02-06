@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 
 public class InkManager : MonoBehaviour { 
@@ -30,6 +31,10 @@ public class InkManager : MonoBehaviour {
     private GameManager gm;
     [SerializeField]
     private Button nextButton;
+    [SerializeField]
+    private TextMeshProUGUI displayNameText;
+    [SerializeField]
+    private GameObject speakerNamePanel;
 
 
     [SerializeField]
@@ -37,6 +42,9 @@ public class InkManager : MonoBehaviour {
     private TextMeshProUGUI[] choicesText;
     //private bool dialogueIsPlaying = false;
 
+    private const string SPEAKER_TAG = "speaker";
+    //private const string PORTRAIT_TAG = "portrait";
+    //private const string LAYOUT_TAG = "layout";
 
 
     void Start()
@@ -95,10 +103,45 @@ public class InkManager : MonoBehaviour {
 
             DisplayChoices();
             nextButton.gameObject.SetActive(false);
+            //handle tags
+            HandleTags(story.currentTags);
         }
         else
         {
             ExitDialogue();
+        }
+    }
+
+    private void HandleTags(List<string> currentTags)
+    {
+        foreach (string tag in currentTags)
+        {
+            string[] splitTag = tag.Split(':');
+            if (splitTag.Length != 2 )
+            {
+                Debug.Log("tag cannot be appropiately parsed: " + tag);
+            }
+            string tagKey = splitTag[0].Trim();
+            string tagValue = splitTag[1].Trim();
+
+            //handle the tag
+
+            switch (tagKey)
+            {
+                case SPEAKER_TAG:
+                    //Debug.Log("speaker=" + tagValue);
+                    displayNameText.text = tagValue;
+                    break;
+                //case LAYOUT_TAG:
+                    //Debug.Log("layout=" + tagValue);
+                    //break;
+                //case PORTRAIT_TAG:
+                    //Debug.Log("portrait=" + tagValue);
+                    //break;
+                default:
+                    Debug.Log("tag came in but its not currently being handled: " + tag);
+                    break;
+            }
         }
     }
     public void ExitDialogue()
