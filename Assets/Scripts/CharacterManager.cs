@@ -2,6 +2,7 @@ using Ink.Parsed;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.Examples;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -15,62 +16,83 @@ public class CharacterManager : MonoBehaviour
 
 
     public GameObject[] characters;
-    public List<GameObject> charactersList = new List<GameObject>();
+    private List<GameObject> charactersList = new List<GameObject>();
+    private List<Character> activeCharacters = new List<Character>();
+
     [SerializeField]
-    Vector3 leftPosition, rightPosition;
-
-    List<Character> activeCharacters = new List<Character>();
-
+    Vector3 leftPosition;
+    [SerializeField]
+    Vector3 rightPosition;
+    [SerializeField]
+    private Transform characterRoot;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        for(int i = 0; i < characters.Length; i++)
+        foreach (GameObject prefab in characters)
         {
-            GameObject newCharacter = Instantiate(characters[i]);
+            GameObject newCharacter = Instantiate(prefab, characterRoot);
+
             newCharacter.SetActive(false);
-            newCharacter.name = characters[i].name;
+
+            //remove clones
+            newCharacter.name = prefab.name;
+
             charactersList.Add(newCharacter);
         }
     }
     public void PlaceCharacters(string leftCharacterName, string rightCharacterName)
     {
-        //activeCharacters.Clear();
-        foreach (GameObject gO in charactersList)
+        foreach (GameObject character in charactersList)
         {
-            if(gO.name == leftCharacterName)
-            {
-                gO.SetActive(true);
-                gO.GetComponent<Character>().ID = 0;
-                activeCharacters.Add(gO.GetComponent<Character>());
-                gO.transform.position = leftPosition;
-            } else if(gO.name == rightCharacterName)
-            {
-                gO.SetActive(true);
-                gO.GetComponent<Character>().ID = 1;
-                activeCharacters.Add(gO.GetComponent<Character>());
-                gO.transform.position = rightPosition;
-            }
-        
+            character.SetActive(false);
         }
+
+        activeCharacters.Clear();
+
+        //spawn left character
+        SpawnCharacter(leftCharacterName, 0, leftPosition);
+        //spawn right character
+        SpawnCharacter(rightCharacterName, 1, rightPosition);
+
     }
     // Update is called once per frame
     void Update()
     {
         
     }
+    private void SpawnCharacter(string name, int id, Vector3 position)
+    {
+
+        if (string.IsNullOrEmpty(name)) return;
+
+        GameObject characterObject = charactersList.Find(c => c.name == name);
+        characterObject.transform.localPosition = new Vector3(position.x, position.y, 0f);
+
+        if (characterObject == null)
+        {
+            Debug.LogError("Character not found: " + name);
+            return;
+        }
+        characterObject.SetActive(true);
+        characterObject.transform.localPosition = position;
+
+        Character character = characterObject.GetComponent<Character>();
+        character.ID = id;
+
+        activeCharacters.Add(character);
+    }
 
     public void ChangeCharacterEmotion(string emotion, int ID)
     {
         foreach (Character character in activeCharacters)
         {
-            if(character.gameObject.activeInHierarchy)
+            
+            if (character.ID == ID)
             {
-                if (character.ID == ID)
-                {
-                    character.ChangeEmotion(emotion);
-                }
+                character.ChangeEmotion(emotion);
             }
+            
         }
     }
 }

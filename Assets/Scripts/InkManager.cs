@@ -41,14 +41,11 @@ public class InkManager : MonoBehaviour {
 
     void Start()
     {
-        // Remove the default message
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
         //dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         nextButton.onClick.AddListener(ContinueStory);
-        //RemoveChildren();
-        //StartStory();
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
         foreach (GameObject choice in choices)
@@ -75,8 +72,6 @@ public class InkManager : MonoBehaviour {
         dialoguePanel.SetActive(true);
 
         ContinueStory();
-        
-        //RefreshView();
     }
     public void NextLine()
     {
@@ -111,28 +106,6 @@ public class InkManager : MonoBehaviour {
         dialoguePanel.SetActive(false);
     }
 
-    // This is the main function called every time the story changes. It does a few things:
-    // Destroys all the old content and choices.
-    // Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
-    void RefreshView()
-    {
-        // Remove all the UI on screen
-        RemoveChildren();
-
-        // Read all the content until we can't continue any more
-        
-
-        // Display all the choices, if there are any!
-      
-        // If we've read all the content and there's no choices, the story is finished!
-       
-    }
-
-    // When we click the choice button, tell the story to choose that choice!
-    
-
-    // Creates a textbox showing the the line of text
-
     private TMP_Text currentStoryText;
     void CreateContentView(string text)
     {
@@ -146,9 +119,6 @@ public class InkManager : MonoBehaviour {
         currentStoryText = Instantiate(dialogueText, dialoguePanel.transform, false);
         currentStoryText.text = text;
     }
-
-    // Creates a button showing the choice text
-
 
     // Destroys all the children of this gameobject (all the UI)
     void RemoveChildren()

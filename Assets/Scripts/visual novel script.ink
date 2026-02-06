@@ -8,7 +8,7 @@
 
 EXTERNAL place_characters(left_character_name, right_character_name)
 EXTERNAL change_emotion(emotion, ID)
-{place_characters("Charcter", "Character 1")}
+{place_characters("Character", "Character 1")}
 {change_emotion("Normal",0)}
 
 
