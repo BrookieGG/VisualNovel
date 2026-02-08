@@ -51,8 +51,8 @@ public class InkManager : MonoBehaviour {
     {
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
-        //dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
+        speakerNamePanel.SetActive(false);
         nextButton.onClick.AddListener(ContinueStory);
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -76,6 +76,11 @@ public class InkManager : MonoBehaviour {
         {
             cm.ChangeCharacterEmotion(emotion, ID);
         });
+        story.BindExternalFunction("remove_character", (int ID) =>
+        {
+            if (cm != null)
+                cm.RemoveCharacter(ID);
+        });
 
         dialoguePanel.SetActive(true);
 
@@ -88,25 +93,40 @@ public class InkManager : MonoBehaviour {
 
     private void ContinueStory()
     {
-        if(story.canContinue)
+        HideChoices();
+
+        // Clear previous dialogue
+        dialogueText.text = "";
+
+        bool textDisplayed = false;
+
+        // Keep continuing until we get a line with actual text OR reach choices
+        while (story.canContinue)
         {
-            // Continue gets the next line of the story and removes any white space from the text.
             string text = story.Continue().Trim();
-            // Display the text on screen!
-            CreateContentView(text);
 
-            HideChoices();
-            nextButton.gameObject.SetActive(true);
+            // Handle any tags attached to this line
+            HandleTags(story.currentTags);
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                // Display this line
+                CreateContentView(text);
+                nextButton.gameObject.SetActive(true);
+                textDisplayed = true;
+                break;
+            }
         }
-        else if (story.currentChoices.Count > 0)
-        {
 
+        // If we can't continue but there are choices, show them
+        if (!textDisplayed && story.currentChoices.Count > 0)
+        {
             DisplayChoices();
             nextButton.gameObject.SetActive(false);
-            //handle tags
-            HandleTags(story.currentTags);
         }
-        else
+
+        // If story is fully done
+        if (!textDisplayed && story.currentChoices.Count == 0)
         {
             ExitDialogue();
         }
@@ -114,23 +134,41 @@ public class InkManager : MonoBehaviour {
 
     private void HandleTags(List<string> currentTags)
     {
+
+        displayNameText.text = "";
+
+        bool speakerSetThisLine = false;
+
         foreach (string tag in currentTags)
         {
             string[] splitTag = tag.Split(':');
-            if (splitTag.Length != 2 )
-            {
-                Debug.Log("tag cannot be appropiately parsed: " + tag);
-            }
+            if (splitTag.Length != 2) continue;
+           
             string tagKey = splitTag[0].Trim();
             string tagValue = splitTag[1].Trim();
+
+            if (tag.StartsWith("speaker:"))
+            {
+                displayNameText.text = tag.Substring(2);
+            }
 
             //handle the tag
 
             switch (tagKey)
             {
                 case SPEAKER_TAG:
-                    //Debug.Log("speaker=" + tagValue);
-                    displayNameText.text = tagValue;
+                    speakerSetThisLine = true;
+
+                    if (string.IsNullOrEmpty(tagValue) || tagValue == "NONE")
+                    {
+                        speakerNamePanel.SetActive(false);
+                    }
+                    else
+                    {
+                        speakerNamePanel.SetActive(true);
+                        //Debug.Log("speaker=" + tagValue);
+                        displayNameText.text = tagValue;
+                    }
                     break;
                 //case LAYOUT_TAG:
                     //Debug.Log("layout=" + tagValue);
@@ -142,6 +180,10 @@ public class InkManager : MonoBehaviour {
                     Debug.Log("tag came in but its not currently being handled: " + tag);
                     break;
             }
+        }
+        if (!speakerSetThisLine)
+        {
+            speakerNamePanel.SetActive(false);
         }
     }
     public void ExitDialogue()

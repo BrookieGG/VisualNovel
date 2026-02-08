@@ -8,6 +8,7 @@
 
 EXTERNAL place_characters(left_character_name, right_character_name)
 EXTERNAL change_emotion(emotion, ID)
+EXTERNAL remove_character(ID)
 
 
 After a night shift at the office…
@@ -20,14 +21,17 @@ The cases that never quite leave your head.
  * [Get Out of Bed.] -> Bed
 
 ==Bed==
-{place_characters("Character", "Character 1")}
-{change_emotion("Normal",0)}
+    {place_characters("Character", "Character 1")}
+    {change_emotion("Normal",0)}
+    I guess I better start getting ready. #speaker:YOU
+    -> OutsideMansion
 
-I guess I better start getting ready. #speaker:YOU
+==OutsideMansion==
+{remove_character(0)} 
 
-
-It’s been years since you’ve been here.
-The house seems larger than you last recall.
+for some reason unity skips the first line so write random stuff here and it will skip it and the second line will be the first one
+It’s been years since you’ve been here. #speaker:
+The house seems larger than you last recall. #speaker:
 
 
     -> END

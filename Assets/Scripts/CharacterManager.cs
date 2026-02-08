@@ -51,9 +51,11 @@ public class CharacterManager : MonoBehaviour
         activeCharacters.Clear();
 
         //spawn left character
+        if(!string.IsNullOrEmpty(leftCharacterName))
         SpawnCharacter(leftCharacterName, 0, leftPosition);
         //spawn right character
-        SpawnCharacter(rightCharacterName, 1, rightPosition);
+        if (!string.IsNullOrEmpty(rightCharacterName))
+            SpawnCharacter(rightCharacterName, 1, rightPosition);
 
     }
     // Update is called once per frame
@@ -93,6 +95,16 @@ public class CharacterManager : MonoBehaviour
                 character.ChangeEmotion(emotion);
             }
             
+        }
+    }
+    public void RemoveCharacter(int ID)
+    {
+        foreach (Character character in activeCharacters)
+        {
+            if (character.ID == ID && character.gameObject.activeInHierarchy)
+            {
+                character.gameObject.SetActive(false);
+            }
         }
     }
 }
