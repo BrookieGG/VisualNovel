@@ -24,14 +24,12 @@ The cases that never quite leave your head.
     {place_characters("Character", "Character 1")}
     {change_emotion("Normal",0)}
     I guess I better start getting ready. #speaker:YOU
-    -> OutsideMansion
+    -> OutsideMansion1
 
-==OutsideMansion==
-{remove_character(0)} 
-
-for some reason unity skips the first line so write random stuff here and it will skip it and the second line will be the first one
-It’s been years since you’ve been here. #speaker:
-The house seems larger than you last recall. #speaker:
-
+==OutsideMansion1==
+    {remove_character(0)} #speaker:
+    It’s been years since you’ve been here. #speaker:
+    The house seems larger than you last recall. #speaker:
+    You walk up to the door. #speaker:
 
     -> END

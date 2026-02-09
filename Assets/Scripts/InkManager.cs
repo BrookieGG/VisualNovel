@@ -45,6 +45,7 @@ public class InkManager : MonoBehaviour {
     private const string SPEAKER_TAG = "speaker";
     //private const string PORTRAIT_TAG = "portrait";
     //private const string LAYOUT_TAG = "layout";
+    private string currentSpeaker = "";
 
 
     void Start()
@@ -91,7 +92,7 @@ public class InkManager : MonoBehaviour {
         ContinueStory();
     }
 
-    private void ContinueStory()
+    public void ContinueStory()
     {
         HideChoices();
 
@@ -137,7 +138,7 @@ public class InkManager : MonoBehaviour {
 
         displayNameText.text = "";
 
-        bool speakerSetThisLine = false;
+        //bool speakerSetThisLine = false;
 
         foreach (string tag in currentTags)
         {
@@ -147,9 +148,20 @@ public class InkManager : MonoBehaviour {
             string tagKey = splitTag[0].Trim();
             string tagValue = splitTag[1].Trim();
 
-            if (tag.StartsWith("speaker:"))
+            if (tagKey == SPEAKER_TAG)
             {
-                displayNameText.text = tag.Substring(2);
+                if (string.IsNullOrEmpty(tagValue))
+                {
+                    currentSpeaker = "";
+                    speakerNamePanel.SetActive(false);
+                }
+                else
+                {
+                    currentSpeaker = tagValue;
+                    displayNameText.text = currentSpeaker;
+                    speakerNamePanel.SetActive(true);
+                }
+                  
             }
 
             //handle the tag
@@ -157,7 +169,7 @@ public class InkManager : MonoBehaviour {
             switch (tagKey)
             {
                 case SPEAKER_TAG:
-                    speakerSetThisLine = true;
+                    //speakerSetThisLine = true;
 
                     if (string.IsNullOrEmpty(tagValue) || tagValue == "NONE")
                     {
@@ -181,10 +193,7 @@ public class InkManager : MonoBehaviour {
                     break;
             }
         }
-        if (!speakerSetThisLine)
-        {
-            speakerNamePanel.SetActive(false);
-        }
+       
     }
     public void ExitDialogue()
     {

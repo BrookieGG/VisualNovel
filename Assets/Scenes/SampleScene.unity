@@ -2442,7 +2442,7 @@ MonoBehaviour:
   dialogueText: {fileID: 6753736368232019482}
   buttonPrefab: {fileID: 2463307264705771777}
   dialoguePanel: {fileID: 1235887969}
-  nextButton: {fileID: 2463307264705771777}
+  nextButton: {fileID: 7559341731749089982, guid: 1ca3c792954541e4e99f79b645e98684, type: 3}
   displayNameText: {fileID: 1484107154}
   speakerNamePanel: {fileID: 1805070142}
   choices:
