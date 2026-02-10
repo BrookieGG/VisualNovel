@@ -42,6 +42,9 @@ public class InkManager : MonoBehaviour {
     private TextMeshProUGUI[] choicesText;
     //private bool dialogueIsPlaying = false;
 
+    [SerializeField]
+    private float typingSpeed = 0.05f;
+
     private const string SPEAKER_TAG = "speaker";
     //private const string PORTRAIT_TAG = "portrait";
     //private const string LAYOUT_TAG = "layout";
@@ -112,7 +115,8 @@ public class InkManager : MonoBehaviour {
             if (!string.IsNullOrEmpty(text))
             {
                 // Display this line
-                CreateContentView(text);
+                StartCoroutine(DisplayLine(text));
+                //CreateContentView(text);
                 nextButton.gameObject.SetActive(true);
                 textDisplayed = true;
                 break;
@@ -130,6 +134,19 @@ public class InkManager : MonoBehaviour {
         if (!textDisplayed && story.currentChoices.Count == 0)
         {
             ExitDialogue();
+        }
+    }
+
+    private IEnumerator DisplayLine(string line)
+    {
+        // empty the dialogue text
+        dialogueText.text = "";
+
+        //display one letter at a time
+        foreach (char letter in line.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
         }
     }
 

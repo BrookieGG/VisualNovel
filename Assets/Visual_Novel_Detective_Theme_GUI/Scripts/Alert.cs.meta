@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 111db1babf50eb2469d6d1df0f5a25cd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 198021
+  packageName: Detective Themed Visual Novel GUI Pack
+  packageVersion: 1.0
+  assetPath: Assets/Visual_Novel_Detective_Theme_GUI/Scripts/Alert.cs
+  uploadId: 447792
