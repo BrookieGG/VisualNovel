@@ -2,11 +2,12 @@ using TMPro;
 using UnityEngine;
 //using UnityEngine.UIElements;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    [SerializeField]
-    public Button startButton;
+    //[SerializeField]
+    //public Button startButton;
     [SerializeField]
     public TextAsset inkJSON;
     [SerializeField]
@@ -15,7 +16,11 @@ public class DialogueTrigger : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startButton.onClick.AddListener(Story);
+        if (inkManager != null || inkJSON != null)
+        {
+            StartCoroutine(Story());
+        }
+       
     }
 
     // Update is called once per frame
@@ -24,9 +29,9 @@ public class DialogueTrigger : MonoBehaviour
 
     }
 
-    public void Story()
+    private IEnumerator Story()
     {
-        startButton.gameObject.SetActive(false);
+        yield return null;
         inkManager.StartStory(inkJSON);
     }
 }

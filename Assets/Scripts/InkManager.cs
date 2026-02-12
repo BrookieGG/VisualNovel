@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 
 public class InkManager : MonoBehaviour { 
 
     [SerializeField]
-    //private TextAsset inkJSONAsset = null;
     public Story story;
 
     [SerializeField]
@@ -23,8 +23,6 @@ public class InkManager : MonoBehaviour {
     // UI Prefabs
     [SerializeField]
     private TMP_Text dialogueText = null;
-    [SerializeField]
-    private Button buttonPrefab = null;
     [SerializeField]
     private GameObject dialoguePanel;
     private CharacterManager cm;
@@ -35,6 +33,7 @@ public class InkManager : MonoBehaviour {
     private TextMeshProUGUI displayNameText;
     [SerializeField]
     private GameObject speakerNamePanel;
+    Fade fade;
 
 
     [SerializeField]
@@ -49,10 +48,12 @@ public class InkManager : MonoBehaviour {
     //private const string PORTRAIT_TAG = "portrait";
     //private const string LAYOUT_TAG = "layout";
     private string currentSpeaker = "";
+    private bool isTyping = false;
 
 
     void Start()
     {
+        fade = FindAnyObjectByType<Fade>();
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
         dialoguePanel.SetActive(false);
@@ -70,6 +71,11 @@ public class InkManager : MonoBehaviour {
     // Creates a new Story object with the compiled story which we can then play!
     public void StartStory(TextAsset inkJSON)
     {
+        if (fade != null)
+        {
+            fade.canvasgroup.alpha = 0f; // make text visible immediately
+        }
+
         story = new Story(inkJSON.text);
 
         story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
@@ -86,8 +92,6 @@ public class InkManager : MonoBehaviour {
                 cm.RemoveCharacter(ID);
         });
 
-        dialoguePanel.SetActive(true);
-
         ContinueStory();
     }
     public void NextLine()
@@ -97,6 +101,18 @@ public class InkManager : MonoBehaviour {
 
     public void ContinueStory()
     {
+
+        dialoguePanel.SetActive(true);
+        canvas.gameObject.SetActive(true);
+
+        if (isTyping)
+        {
+            StopAllCoroutines();
+            dialogueText.text = story.currentText;
+            isTyping = false;
+            return;
+        }
+
         HideChoices();
 
         // Clear previous dialogue
@@ -133,13 +149,14 @@ public class InkManager : MonoBehaviour {
         // If story is fully done
         if (!textDisplayed && story.currentChoices.Count == 0)
         {
-            ExitDialogue();
+            NextScene();
         }
     }
 
     private IEnumerator DisplayLine(string line)
     {
         // empty the dialogue text
+        isTyping = true;
         dialogueText.text = "";
 
         //display one letter at a time
@@ -148,6 +165,7 @@ public class InkManager : MonoBehaviour {
             dialogueText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
+        isTyping = false;
     }
 
     private void HandleTags(List<string> currentTags)
@@ -211,10 +229,6 @@ public class InkManager : MonoBehaviour {
             }
         }
        
-    }
-    public void ExitDialogue()
-    {
-        dialoguePanel.SetActive(false);
     }
 
     private TMP_Text currentStoryText;
@@ -289,5 +303,26 @@ public class InkManager : MonoBehaviour {
             choice.SetActive(false);
         }
     }
-        
+    private void NextScene()
+    {
+       StartCoroutine(LoadNextScene());
+    }
+    private IEnumerator LoadNextScene()
+    {
+        dialoguePanel.SetActive(false);
+
+        int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            fade.FadeIn();
+            yield return new WaitForSeconds(fade.fadeTime);
+            SceneManager.LoadScene(nextIndex);
+        }
+        else
+        {
+            Debug.LogWarning("Next scene name not set on InkManager.");
+        }
+    }
 }

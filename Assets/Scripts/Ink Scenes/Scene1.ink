@@ -24,12 +24,6 @@ The cases that never quite leave your head.
     {place_characters("Character", "Character 1")}
     {change_emotion("Normal",0)}
     I guess I better start getting ready. #speaker:YOU
-    -> OutsideMansion1
-
-==OutsideMansion1==
-    {remove_character(0)} #speaker:
-    It’s been years since you’ve been here. #speaker:
-    The house seems larger than you last recall. #speaker:
-    You walk up to the door. #speaker:
+        {remove_character(0)} #speaker:
 
     -> END
