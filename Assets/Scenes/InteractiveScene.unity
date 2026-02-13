@@ -725,7 +725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e36a9b209b1b2a41b5b0f5b1a4ac092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasgroup: {fileID: 0}
+  canvasgroup: {fileID: 1921942123}
   fadeIn: 0
   fadeOut: 0
   fadeTime: 1
@@ -2457,7 +2457,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1812581897}
-  - component: {fileID: 1812581898}
   m_Layer: 5
   m_Name: Evidence Area
   m_TagString: Untagged
@@ -2486,20 +2485,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1812581898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1812581896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aa85ceaf4ed9ed45a800d309c271e5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  concludeButton: {fileID: 0}
-  concludeSection: {fileID: 0}
 --- !u!1 &1815642681
 GameObject:
   m_ObjectHideFlags: 0
