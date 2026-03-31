@@ -1,1 +1,1 @@
-﻿{"inkVersion":21,"root":[[["done",{"#f":5,"#n":"g-0"}],null],"done",{"OutsideMansion":["^It’s been years since you’ve been here.","\n","^The house seems larger than you last recall.","\n","^You walk up to the door.","\n","end",{"#f":1}],"#f":1}],"listDefs":{}}
+﻿{"inkVersion":21,"root":[["^You grab your phone off your nightstand.","\n","ev","str","^phone","/str",{"x()":"place_center_object","exArgs":1},"pop","/ev","\n","^I guess I better start getting ready.","\n","end",["done",{"#f":5,"#n":"g-0"}],null],"done",{"#f":1}],"listDefs":{}}

@@ -21,9 +21,6 @@ The cases that never quite leave your head.
  * [Get Out of Bed.] -> Bed
 
 ==Bed==
-    {place_characters("Character", "Character 1")}
-    {change_emotion("Normal",0)}
-    I guess I better start getting ready. #speaker:YOU
-        {remove_character(0)} #speaker:
+    # sfx:bed
 
     -> END

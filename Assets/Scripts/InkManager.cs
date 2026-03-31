@@ -13,6 +13,7 @@ public class InkManager : MonoBehaviour {
 
     [SerializeField]
     public Story story;
+    public TextAsset inkJSON;
 
     [SerializeField]
     private Canvas canvas = null;
@@ -31,6 +32,8 @@ public class InkManager : MonoBehaviour {
     [SerializeField]
     private GameObject speakerNamePanel;
     Fade fade;
+    [SerializeField]
+    private Transform centerObjectPlaceholder;
 
 
     [SerializeField]
@@ -48,26 +51,42 @@ public class InkManager : MonoBehaviour {
     private bool isTyping = false;
 
 
+
     void Start()
     {
         fade = FindAnyObjectByType<Fade>();
         cm = GetComponent<CharacterManager>();
         gm = GetComponent<GameManager>();
+
         dialoguePanel.SetActive(false);
         speakerNamePanel.SetActive(false);
+
         nextButton.onClick.AddListener(ContinueStory);
+
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
+
         foreach (GameObject choice in choices)
         {
             choicesText[index] = choice.GetComponentInChildren<TextMeshProUGUI>();
             index++;
+        }
+
+
+        if (inkJSON !=null)
+        {
+            StartStory(inkJSON);
+        }
+        else
+        {
+            //Debug.LogError("inkJSON is null! Assign a compiled Ink JSON file in the Inspector.");
         }
     }
 
     // Creates a new Story object with the compiled story which we can then play!
     public void StartStory(TextAsset inkJSON)
     {
+  
         if (fade != null)
         {
             fade.canvasgroup.alpha = 0f; // make text visible immediately
@@ -88,6 +107,12 @@ public class InkManager : MonoBehaviour {
             if (cm != null)
                 cm.RemoveCharacter(ID);
         });
+        story.BindExternalFunction("place_center_object", (string objectName) =>
+        {
+            GameObject prefab = Resources.Load<GameObject>($"CenterObjects/{objectName}");
+            if (prefab != null)
+                PlaceObject(prefab);
+        });
 
         ContinueStory();
     }
@@ -98,6 +123,7 @@ public class InkManager : MonoBehaviour {
 
     public void ContinueStory()
     {
+        //Debug.Log("Entering ContinueStory");
 
         dialoguePanel.SetActive(true);
         canvas.gameObject.SetActive(true);
@@ -214,6 +240,13 @@ public class InkManager : MonoBehaviour {
                         displayNameText.text = tagValue;
                     }
                     break;
+
+                case "sfx":
+                    AudioManager.Instance.PlaySFX(tagValue);
+                    break;
+                //case "place_center_object":
+                    //GameObject prefab = Resources.Load<GameObject>($"CenterObjects/{tagValue}");
+                    //break;
                 //case LAYOUT_TAG:
                     //Debug.Log("layout=" + tagValue);
                     //break;
@@ -322,4 +355,14 @@ public class InkManager : MonoBehaviour {
             Debug.LogWarning("Next scene name not set on InkManager.");
         }
     }
+    public void PlaceObject(GameObject objPrefab)
+    {
+        foreach (Transform child in centerObjectPlaceholder)
+        {
+            Destroy(child.gameObject);
+        }
+        GameObject obj = Instantiate(objPrefab, centerObjectPlaceholder);
+        obj.transform.localPosition = Vector3.zero;
+    }
+
 }
