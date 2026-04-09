@@ -49,6 +49,7 @@ public class InkManager : MonoBehaviour {
     //private const string LAYOUT_TAG = "layout";
     private string currentSpeaker = "";
     private bool isTyping = false;
+    private bool isWaiting = false;
 
 
 
@@ -94,6 +95,11 @@ public class InkManager : MonoBehaviour {
 
         story = new Story(inkJSON.text);
 
+        if (ClueManager.Instance.HasClue("ash_found"))
+            story.variablesState["ash_collected"] = true;
+        if (ClueManager.Instance.HasClue("orangehair_found"))
+            story.variablesState["hair_collected"] = true;
+
         story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
         {
             if(cm != null) cm.PlaceCharacters(leftName, rightName);
@@ -113,6 +119,24 @@ public class InkManager : MonoBehaviour {
             if (prefab != null)
                 PlaceObject(prefab);
         });
+        story.BindExternalFunction("wait", (float seconds) =>
+        {
+            isWaiting = true;
+            StartCoroutine(WaitAndContinue(seconds));
+        });
+        story.BindExternalFunction("remove_center_object", () =>
+        {
+            RemoveCenterObject();
+        });
+        if (ClueManager.Instance.HasClue("Clue_Ash"))
+        {
+            story.variablesState["ash_collected"] = true; // Ink variable in Scene B
+        }
+
+        if (ClueManager.Instance.HasClue("Clue_Hair"))
+        {
+            story.variablesState["hair_collected"] = true;
+        }
 
         ContinueStory();
     }
@@ -123,6 +147,10 @@ public class InkManager : MonoBehaviour {
 
     public void ContinueStory()
     {
+        StartCoroutine(ContinueStoryCoroutine());
+    }
+    public IEnumerator ContinueStoryCoroutine()
+    { 
         //Debug.Log("Entering ContinueStory");
 
         dialoguePanel.SetActive(true);
@@ -133,7 +161,7 @@ public class InkManager : MonoBehaviour {
             StopAllCoroutines();
             dialogueText.text = story.currentText;
             isTyping = false;
-            return;
+            yield break;
         }
 
         HideChoices();
@@ -146,6 +174,9 @@ public class InkManager : MonoBehaviour {
         // Keep continuing until we get a line with actual text OR reach choices
         while (story.canContinue)
         {
+            while (isWaiting)
+                yield return null;
+
             string text = story.Continue().Trim();
 
             // Handle any tags attached to this line
@@ -154,7 +185,7 @@ public class InkManager : MonoBehaviour {
             if (!string.IsNullOrEmpty(text))
             {
                 // Display this line
-                StartCoroutine(DisplayLine(text));
+                yield return StartCoroutine(DisplayLine(text));
                 //CreateContentView(text);
                 nextButton.gameObject.SetActive(true);
                 textDisplayed = true;
@@ -364,5 +395,18 @@ public class InkManager : MonoBehaviour {
         GameObject obj = Instantiate(objPrefab, centerObjectPlaceholder);
         obj.transform.localPosition = Vector3.zero;
     }
-
+    private IEnumerator WaitAndContinue(float seconds)
+    {
+        isWaiting = true;
+        yield return new WaitForSeconds(seconds);
+        isWaiting = false;
+    }
+    public void RemoveCenterObject()
+    {
+        foreach (Transform child in centerObjectPlaceholder)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+   
 }

@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3319518600308399650}
   - component: {fileID: 6678219187790830777}
-  - component: {fileID: 5397458554681607787}
+  - component: {fileID: -763866467617958039}
   m_Layer: 0
-  m_Name: Character 2
+  m_Name: George
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.3570527, y: -0.106095806, z: 0.036752414}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emotions:
-  - {fileID: -2857310172840132154, guid: 176a6cc0b53aaa14eb11658c5eb01066, type: 3}
-  - {fileID: -2857310172840132154, guid: 176a6cc0b53aaa14eb11658c5eb01066, type: 3}
-  - {fileID: -2857310172840132154, guid: 176a6cc0b53aaa14eb11658c5eb01066, type: 3}
-  - {fileID: -2857310172840132154, guid: 176a6cc0b53aaa14eb11658c5eb01066, type: 3}
+  - {fileID: -4464109896398799153, guid: 662c5ebb23944224c85c23026f4e318d, type: 3}
+  - {fileID: -9162828211902059021, guid: 2377e3f75e7a0c947993a0e646386eec, type: 3}
+  - {fileID: 2081770953740911973, guid: 4f80aec6951d9be4c9e180081b651787, type: 3}
+  - {fileID: 1212656191580834748, guid: a9e8aa237d0cd19439e222ab0c09fce4, type: 3}
   ID: 0
   myState: 0
---- !u!212 &5397458554681607787
+--- !u!212 &-763866467617958039
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
