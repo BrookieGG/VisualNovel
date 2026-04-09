@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     public AudioClip bed;
+    public AudioClip doorbell;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -25,6 +26,10 @@ public class AudioManager : MonoBehaviour
         {
             case "bed":
                 sfxSource.PlayOneShot(bed);
+                break;
+
+            case "doorbell":
+                sfxSource.PlayOneShot(doorbell);
                 break;
 
             default:

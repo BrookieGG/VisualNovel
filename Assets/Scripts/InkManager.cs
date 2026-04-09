@@ -73,15 +73,13 @@ public class InkManager : MonoBehaviour {
             index++;
         }
 
+        if (inkJSON == null)
+        {
+            Debug.LogError("No Ink JSON assigned in scene!");
+            return;
+        }
 
-        if (inkJSON !=null)
-        {
-            StartStory(inkJSON);
-        }
-        else
-        {
-            //Debug.LogError("inkJSON is null! Assign a compiled Ink JSON file in the Inspector.");
-        }
+        StartStory(inkJSON);
     }
 
     // Creates a new Story object with the compiled story which we can then play!
@@ -95,10 +93,14 @@ public class InkManager : MonoBehaviour {
 
         story = new Story(inkJSON.text);
 
-        if (ClueManager.Instance.HasClue("ash_found"))
-            story.variablesState["ash_collected"] = true;
-        if (ClueManager.Instance.HasClue("orangehair_found"))
-            story.variablesState["hair_collected"] = true;
+        if (ClueManager.Instance != null)
+        {
+            if (ClueManager.Instance.HasClue("ash_found"))
+                story.variablesState["ash_collected"] = true;
+
+            if (ClueManager.Instance.HasClue("orangehair_found"))
+                story.variablesState["hair_collected"] = true;
+        }
 
         story.BindExternalFunction("place_characters", (string leftName, string rightName) =>
         {
@@ -128,14 +130,10 @@ public class InkManager : MonoBehaviour {
         {
             RemoveCenterObject();
         });
-        if (ClueManager.Instance.HasClue("Clue_Ash"))
+        if (ClueManager.Instance != null)
         {
-            story.variablesState["ash_collected"] = true; // Ink variable in Scene B
-        }
-
-        if (ClueManager.Instance.HasClue("Clue_Hair"))
-        {
-            story.variablesState["hair_collected"] = true;
+            story.variablesState["ash_collected"] = ClueManager.Instance.HasClue("ash_found");
+            story.variablesState["hair_collected"] = ClueManager.Instance.HasClue("orangehair_found");
         }
 
         ContinueStory();
