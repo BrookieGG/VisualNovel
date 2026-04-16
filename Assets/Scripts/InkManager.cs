@@ -224,6 +224,8 @@ public class InkManager : MonoBehaviour {
     {
 
         displayNameText.text = "";
+        displayNameText.text = "";
+        speakerNamePanel.SetActive(false);
 
         //bool speakerSetThisLine = false;
 
@@ -231,25 +233,31 @@ public class InkManager : MonoBehaviour {
         {
             string[] splitTag = tag.Split(':');
             if (splitTag.Length != 2) continue;
-           
+
             string tagKey = splitTag[0].Trim();
             string tagValue = splitTag[1].Trim();
-
-            if (tagKey == SPEAKER_TAG)
+            switch (tagKey)
             {
-                if (string.IsNullOrEmpty(tagValue))
-                {
-                    currentSpeaker = "";
-                    speakerNamePanel.SetActive(false);
-                }
-                else
-                {
-                    currentSpeaker = tagValue;
-                    displayNameText.text = currentSpeaker;
-                    speakerNamePanel.SetActive(true);
-                }
-                  
+                case SPEAKER_TAG:
+
+                    if (!string.IsNullOrEmpty(tagValue) && tagValue != "NONE")
+                    {
+                        currentSpeaker = tagValue;
+                        displayNameText.text = currentSpeaker;
+                        speakerNamePanel.SetActive(true);
+                    }
+                    break;
+
+                case "sfx":
+                    AudioManager.Instance.PlaySFX(tagValue);
+                    break;
+
+                default:
+                    Debug.Log("tag came in but its not currently being handled: " + tag);
+                    break;
             }
+        
+    
 
             //handle the tag
 
