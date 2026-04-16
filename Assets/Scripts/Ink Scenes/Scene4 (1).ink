@@ -15,18 +15,4 @@ Riche has a butler!? Jeez, and look at the size of this place. What the hell hav
 {remove_character(0)}
 
 
-* [Make your way to the Dining Hall] -> DiningHall_Intro
-
-== DiningHall_Intro ==
-#sound:footsteps
-#transition:fade_out
-#transition:fade_in_dining_hall
-
-{place_characters("Character", "")}
-{change_emotion("Uncomfortable", 0)}
-
-The Dining Hall is full of very wealthy looking people that you don’t recognize in the slightest. They’re all loudly chatting and laughing with each other, as if they’re all old friends. You feel extremely out of place and wonder why you’re even here. Before you can finish contemplating whether or not you should just leave, a large, affluent man approaches you. 
-
-{remove_character(0)}
-
--> END
+* [Go to the Dining Hall] -> END
