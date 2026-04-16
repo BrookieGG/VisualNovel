@@ -25,9 +25,9 @@ public class CharacterManager : MonoBehaviour
     Vector3 rightPosition;
     [SerializeField]
     private Transform characterRoot;
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         foreach (GameObject prefab in characters)
         {
@@ -41,7 +41,32 @@ public class CharacterManager : MonoBehaviour
             charactersList.Add(newCharacter);
         }
     }
-    public void PlaceCharacters(string leftCharacterName, string rightCharacterName)
+         private void SpawnCharacter(string name, int id, Vector3 position)
+    {
+
+        if (string.IsNullOrEmpty(name)) return;
+
+        name = name.Trim();
+
+        GameObject characterObject = charactersList.Find(c => c.name == name);
+        //characterObject.transform.localPosition = new Vector3(position.x, position.y, 0f);
+
+        if (characterObject == null)
+        {
+            Debug.LogError("Character not found: " + name);
+            return;
+        }
+        characterObject.SetActive(true);
+        characterObject.transform.localPosition = position;
+
+        Character character = characterObject.GetComponent<Character>();
+        character.ID = id;
+
+        activeCharacters.Add(character);
+    }
+
+
+public void PlaceCharacters(string leftCharacterName, string rightCharacterName)
     {
         foreach (GameObject character in charactersList)
         {
@@ -63,28 +88,7 @@ public class CharacterManager : MonoBehaviour
     {
         
     }
-    private void SpawnCharacter(string name, int id, Vector3 position)
-    {
-
-        if (string.IsNullOrEmpty(name)) return;
-
-        GameObject characterObject = charactersList.Find(c => c.name == name);
-        characterObject.transform.localPosition = new Vector3(position.x, position.y, 0f);
-
-        if (characterObject == null)
-        {
-            Debug.LogError("Character not found: " + name);
-            return;
-        }
-        characterObject.SetActive(true);
-        characterObject.transform.localPosition = position;
-
-        Character character = characterObject.GetComponent<Character>();
-        character.ID = id;
-
-        activeCharacters.Add(character);
-    }
-
+   
     public void ChangeCharacterEmotion(string emotion, int ID)
     {
         foreach (Character character in activeCharacters)
