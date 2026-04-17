@@ -192,6 +192,8 @@ public class InkManager : MonoBehaviour {
         }
 
         // If we can't continue but there are choices, show them
+
+        Debug.Log("Choices count: " + story.currentChoices.Count);
         if (!textDisplayed && story.currentChoices.Count > 0)
         {
             DisplayChoices();

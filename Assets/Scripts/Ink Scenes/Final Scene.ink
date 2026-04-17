@@ -1,16 +1,23 @@
 VAR hair_collected = false
 VAR ash_collected = false
 
-My evidence points to...
+Who could have done this… who could have killed Richie. Right now my evidence is pointing to… #speaker:You
 
-* {hair_collected} [Viktor]
+* {hair_collected} [Viktor Smirnov]
     -> Viktor
 
-* {ash_collected} [Penelope]
+* {ash_collected} [Penelope Rothschild]
     -> Penelope
+    
+* [George Banks]
+    -> George
+    
+* [Brad Chiles]
+    -> Brad
 
-* [Unsure]
+* [Something Else]
     -> Unsure
+    
 ==Viktor==
 - The orange hair might be tiger fur.
     -> END
@@ -20,3 +27,8 @@ My evidence points to...
 ==Unsure==
 - I think I need more clues...
     -> END
+==Brad==
+-> END
+
+==George==
+-> END

@@ -875,7 +875,7 @@ MonoBehaviour:
   - {fileID: 6816974370289229485, guid: f63e1b2256da1ce46ba5da77047c4961, type: 3}
   - {fileID: 6816974370289229485, guid: 0f298c24a1d6f5c408aae1a90aed0364, type: 3}
   - {fileID: 6816974370289229485, guid: 7a00689dccba34147ab5835d36568605, type: 3}
-  - {fileID: 6816974370289229485, guid: 468ce8bc68b60e548b36b1cf9fd3e687, type: 3}
+  - {fileID: 6816974370289229485, guid: 8e12f598f6c8e2c43ae4e9dd53fce638, type: 3}
   - {fileID: 6816974370289229485, guid: 7316de6485ba8474bb420c16fa98d2de, type: 3}
   leftPosition: {x: 0.3, y: -3.36, z: 0}
   rightPosition: {x: 9, y: -1.16, z: 0}
@@ -1171,7 +1171,7 @@ MonoBehaviour:
   sfxSource: {fileID: 1260451043}
   bed: {fileID: 8300000, guid: 7347de6056e17fe418583c91cf3634db, type: 3}
   doorbell: {fileID: 8300000, guid: 7347de6056e17fe418583c91cf3634db, type: 3}
-  chatting: {fileID: 8300000, guid: c28338138a10aad43a4cbd33be3a96f3, type: 3}
+  chatting: {fileID: 8300000, guid: afe55a86cfc75af4ebab724be349ef9a, type: 3}
 --- !u!82 &1260451043
 AudioSource:
   m_ObjectHideFlags: 0

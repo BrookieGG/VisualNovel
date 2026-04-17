@@ -1,0 +1,2 @@
+In the middle of the night, you hear an ear piercing scream. You jolt awake and run as fast as you can to where the sound came from… the dining hall. You rush as quickly as you can to make it there.
+-> END

@@ -409,7 +409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &150366429
 RectTransform:
   m_ObjectHideFlags: 0
@@ -858,7 +858,7 @@ MonoBehaviour:
   - {fileID: 6816974370289229485, guid: f63e1b2256da1ce46ba5da77047c4961, type: 3}
   - {fileID: 6816974370289229485, guid: 0f298c24a1d6f5c408aae1a90aed0364, type: 3}
   - {fileID: 6816974370289229485, guid: 7a00689dccba34147ab5835d36568605, type: 3}
-  - {fileID: 6816974370289229485, guid: 468ce8bc68b60e548b36b1cf9fd3e687, type: 3}
+  - {fileID: 6816974370289229485, guid: 8e12f598f6c8e2c43ae4e9dd53fce638, type: 3}
   - {fileID: 6816974370289229485, guid: 7316de6485ba8474bb420c16fa98d2de, type: 3}
   leftPosition: {x: 0.3, y: -3.36, z: 0}
   rightPosition: {x: 9, y: -3.36, z: 0}
@@ -1639,7 +1639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasgroup: {fileID: 1503587584}
-  fadeIn: 0
+  fadeIn: 1
   fadeOut: 0
   fadeTime: 1
 --- !u!225 &1503587584
