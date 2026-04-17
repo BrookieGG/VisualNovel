@@ -328,31 +328,41 @@ public class InkManager : MonoBehaviour {
 
         if (currentChoices.Count > choices.Length)
         {
-            Debug.Log("more choices were given than UI can show");
+            Debug.LogWarning("More choices than UI can show");
+        }
+
+        // disable all first
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choices[i].SetActive(false);
         }
 
         int index = 0;
-        //enable and initialize the choices up to the amount of choices in ink
-        foreach(Choice choice in currentChoices)
+
+        foreach (Choice choice in currentChoices)
         {
-            choices[index].gameObject.SetActive(true);
+            if (index >= choices.Length) break;
+
+            choices[index].SetActive(true);
             choicesText[index].text = choice.text;
+
             index++;
         }
-        // go through the remaining choices
-        for (int i = index; i < choices.Length; i++)
-        {
-            choices[i].gameObject.SetActive(false);
-        }
 
-        StartCoroutine(SelectFirstChoice());
     }
 
     private IEnumerator SelectFirstChoice()
     {
         EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForEndOfFrame();
-        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
+
+        // extra frame prevents Unity "sticky selection"
+        //yield return null;
+
+        if (choices.Length > 0 && choices[0].activeInHierarchy)
+        {
+            EventSystem.current.SetSelectedGameObject(choices[0]);
+        }
     }
 
     public void MakeChoice(int choiceIndex)

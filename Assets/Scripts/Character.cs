@@ -28,7 +28,42 @@ public class Character : MonoBehaviour
 
     public void ChangeEmotion(string emotionName)
     {
-        StartCoroutine(emotionName + "State");
+        StopAllCoroutines();
+
+        switch (emotionName.ToLower())
+        {
+            case "happy":
+                SetEmotion(0, CharacterEmotion.happy);
+                break;
+
+            case "sad":
+                SetEmotion(1, CharacterEmotion.sad);
+                break;
+
+            case "normal":
+            case "neutral":
+                SetEmotion(2, CharacterEmotion.normal);
+                break;
+
+            case "angry":
+                SetEmotion(3, CharacterEmotion.angry);
+                break;
+
+            default:
+                Debug.LogWarning("Unknown emotion: " + emotionName);
+                break;
+        }
+    }
+    private void SetEmotion(int index, CharacterEmotion state)
+    {
+        if (index < 0 || index >= emotions.Length)
+        {
+            Debug.LogError("Emotion index out of range!");
+            return;
+        }
+
+        spriteRend.sprite = emotions[index];
+        myState = state;
     }
     IEnumerator HappyState()
     {
